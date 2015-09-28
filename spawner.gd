@@ -16,7 +16,7 @@ func _process(delta):
 	if time_to_wave == 0:
 		time_to_wave = 600
 		wave_count += 1
-		var points = 280 + wave_count * 50
+		var points = 150 + wave_count * 50
 		while points > 100:
 			var type = floor(rand_range(0,4))
 			var side = floor(rand_range(0,4))
@@ -37,22 +37,22 @@ func _process(delta):
 				enemy.get_node("Label").set_text(str(enemy_countdown))
 				get_node("/root/Node").add_child(enemy)
 				enemy_countdown -= 1
-			if type == 1:
+			if type == 1 and wave_count > 3:
 				points -= 200
 				var enemy = enemies[1].instance()
 				enemy.set_pos(position)
 				enemy.get_node("Label").set_text(str(enemy_countdown))
 				get_node("/root/Node").add_child(enemy)
 				enemy_countdown -= 1
-			if type == 2:
-				points -= 300
+			if type == 2 and wave_count > 10:
+				points -= 400
 				var enemy = enemies[2].instance()
 				enemy.set_pos(position)
 				enemy.get_node("Label").set_text(str(enemy_countdown))
 				get_node("/root/Node").add_child(enemy)
 				enemy_countdown -= 1
-			if type == 3:
-				points -= 400
+			if type == 3 and wave_count > 15:
+				points -= 500
 				var enemy = enemies[3].instance()
 				enemy.set_pos(position)
 				enemy.get_node("Label").set_text(str(enemy_countdown))
