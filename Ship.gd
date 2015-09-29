@@ -9,6 +9,11 @@ var primary = preload("res://bullet.scn")
 var energypack = preload("res://energy_pack.gd")
 var hp = 1000
 
+const absolute = 0
+const relative = 1
+
+export(int, "Absolute", "Relative") var direction_mode = absolute
+
 func _ready():
 	set_fixed_process(true)
 	pass
@@ -18,17 +23,40 @@ func _fixed_process(delta):
 	var ang = get_angle_to(get_viewport().get_mouse_pos())
 	rotate(ang*delta*6)
 	
-	if Input.is_action_pressed("forward"):
-		apply_impulse(get_pos(),4*Vector2(sin( get_rot()), cos( get_rot())))
+	if Input.is_action_pressed("open_menu"):
+		get_node("/root/Node/HUD/PopupPanel").show()
+		get_tree().set_pause(true)
+	
+	if direction_mode == relative:
+		if Input.is_action_pressed("forward"):
+			apply_impulse(get_pos(),4*Vector2(sin( get_rot()), cos( get_rot())))
+	
+		if Input.is_action_pressed("backward"):
+			apply_impulse(get_pos(),2*Vector2(-sin( get_rot()), -cos( get_rot())))
+			
+		if Input.is_action_pressed("left"):
+			apply_impulse(get_pos(),3*Vector2(sin( get_rot()+PI/2), cos( get_rot()+PI/2)))
+	
+		if Input.is_action_pressed("right"):
+			apply_impulse(get_pos(),3*Vector2(sin( get_rot()-PI/2), cos( get_rot()-PI/2)))
+	if direction_mode == absolute:
+		var movement_vector = Vector2(0,0)
+		if Input.is_action_pressed("forward"):
+			movement_vector += Vector2(0,-1)
+	
+		if Input.is_action_pressed("backward"):
+			movement_vector += Vector2(0,1)
+			
+		if Input.is_action_pressed("left"):
+			movement_vector += Vector2(-1,0)
+	
+		if Input.is_action_pressed("right"):
+			movement_vector += Vector2(1,0)
 
-	if Input.is_action_pressed("backward"):
-		apply_impulse(get_pos(),2*Vector2(-sin( get_rot()), -cos( get_rot())))
-		
-	if Input.is_action_pressed("left"):
-		apply_impulse(get_pos(),3*Vector2(sin( get_rot()+PI/2), cos( get_rot()+PI/2)))
-
-	if Input.is_action_pressed("right"):
-		apply_impulse(get_pos(),3*Vector2(sin( get_rot()-PI/2), cos( get_rot()-PI/2)))
+		if movement_vector.length() > 0:
+			movement_vector = movement_vector.normalized()*3
+			movement_vector -= Vector2(-sin( get_rot()), -cos( get_rot())) #TODO: fixear esto, mueve el jugador hacia adelante un poquito a pesar de la direccion elegida
+			apply_impulse(get_pos(), movement_vector)
 
 	if Input.is_action_pressed("fire_primary") and primary_cooldown==0:
 		var bullet = primary.instance()

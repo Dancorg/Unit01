@@ -75,7 +75,6 @@ func _ready():
 		rotate_speed = 2
 	set_fixed_process(true)
 
-
 func _fixed_process(delta):
 	if target and target extends player_class:
 		var lead_position = get_lead_position(self, target, primary_vo)
@@ -98,7 +97,7 @@ func _fixed_process(delta):
 				apply_impulse(get_pos(),engine*Vector2(sin( get_rot()), cos( get_rot())))
 			else:
 				change_direction_timer -= 1
-				if change_direction_timer == 0:
+				if change_direction_timer <= 0:
 					if type==TYPE2:
 						change_direction_timer = 20 + round(rand_range(0, 40))
 						sideways_direction = sign(rand_range(-1,1)) * rand_range(PI/4, PI*(3/4))
@@ -178,6 +177,10 @@ func _integrate_forces(state):
 		if contact and contact extends energypack_class:
 			hp += contact.hp
 			contact.hp = 0
+		if contact and contact extends wall_class:
+			change_direction_timer = 30
+			var normal = state.get_contact_local_normal(i)
+			sideways_direction = atan2(normal[0],normal[1]) - get_rot()
 
 func is_clear_line_of_sight(target):
 	var space = get_world_2d().get_space()

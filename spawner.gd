@@ -8,9 +8,9 @@ var enemy_countdown = 1000
 var enemies = [preload("res://eneimgo.scn"), preload("res://enemigo2.scn"),preload("res://enemigo3.scn"),preload("res://enemigo4.scn")]
 
 func _ready():
-	set_process(true)
+	set_fixed_process(true)
 
-func _process(delta):
+func _fixed_process(delta):
 
 	time_to_wave -= 1
 	if time_to_wave == 0:

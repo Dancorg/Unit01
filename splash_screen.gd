@@ -6,8 +6,12 @@ extends Control
 # var b="textvar"
 
 func _ready():
-	pass
+	set_process(true)
 
 
 func _on_ToolButton_pressed():
 	get_tree().change_scene("res://main.scn")
+
+func _process(delta):
+	if Input.is_action_pressed("open_menu"):
+		get_tree().quit()

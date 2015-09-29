@@ -18,7 +18,8 @@ func _integrate_forces(state):
 	for i in range(state.get_contact_count()):
 		var contact = state.get_contact_collider_object(i)
 		hp = 0
-		contact.hp -= damage
+		if contact:
+			contact.hp -= damage
 		var chispa = spark.instance()
 		chispa.set_pos(get_pos())
 		chispa.set_emitting(true)

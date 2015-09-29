@@ -22,10 +22,10 @@ func _integrate_forces(state):
 		if contact: 
 			if contact extends energypack_class:
 				owner.hp += contact.hp
-			hp = 0
 			contact.hp -= damage
-			var chispa = spark.instance()
-			chispa.set_pos(get_pos())
-			chispa.set_emitting(true)
-			chispa.set_rot(get_rot())
-			get_node("/root/Node").add_child(chispa)
+		hp = 0
+		var chispa = spark.instance()
+		chispa.set_pos(get_pos())
+		chispa.set_emitting(true)
+		chispa.set_rot(get_rot())
+		get_node("/root/Node").add_child(chispa)
