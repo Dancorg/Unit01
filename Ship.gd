@@ -19,8 +19,8 @@ func _ready():
 	pass
 
 func _fixed_process(delta):
-	
-	var ang = get_angle_to(get_viewport().get_mouse_pos())
+
+	var ang = get_angle_to(get_viewport_transform().affine_inverse().xform( get_viewport().get_mouse_pos()))
 	rotate(ang*delta*6)
 	
 	if Input.is_action_pressed("open_menu"):

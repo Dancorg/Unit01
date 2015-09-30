@@ -6,6 +6,7 @@ var max_hp=0
 var target = null
 var player_class = preload("res://Ship.gd")
 var wall_class = preload("res://wall.gd")
+var factory_class = preload("res://factory.gd")
 var this_class = load("res://eneimgo.gd")
 var energypack_class = preload("res://energy_pack.gd")
 var energypack = preload("res://energy_pack.scn")
@@ -26,9 +27,7 @@ const TYPE1=0
 const TYPE2=1
 const TYPE3=2
 const TYPE4=3
-const no1=0
-const no2=1
-export(int, "no","no") var no=no1
+
 export(int, "type1", "type2", "type3", "type4") var type=TYPE1
 
 
@@ -37,8 +36,8 @@ func _ready():
 		hp=30
 		max_hp=30.0
 		weapons_cooldown = [40]
-		primary_vo = 300
-		engage_distance = 400
+		primary_vo = 400
+		engage_distance = 500
 		engine = 3
 		primary = preload("res://bullet2.scn")
 		explosion = preload("res://Explosion.scn")
@@ -77,9 +76,15 @@ func _ready():
 
 func _fixed_process(delta):
 	if target and target extends player_class:
+	
 		var lead_position = get_lead_position(self, target, primary_vo)
-		var ang = get_angle_to(lead_position)
 		var distance = sqrt( pow(lead_position[0] - get_pos()[0],2) + pow(lead_position[1] - get_pos()[1],2))
+		
+		if distance > engage_distance:
+			lead_position = target.get_pos()
+			
+		var ang = get_angle_to(lead_position)
+		
 		rotate(min(abs(ang),rotate_speed*delta)*sign(ang))
 		
 		var line_of_sight = is_clear_line_of_sight(target.get_pos())
@@ -170,6 +175,8 @@ func _fixed_process(delta):
 			get_node("/root/Node").add_child(energy)
 			
 		queue_free()
+	if hp > max_hp:
+		hp = max_hp
 
 func _integrate_forces(state):
 	for i in range(state.get_contact_count()):

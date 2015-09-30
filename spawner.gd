@@ -2,7 +2,7 @@
 extends Node2D
 
 var wave_count = 0
-var time_to_wave = 120
+var time_to_wave = 1200000000000000
 var enemy_countdown = 1000
 
 var enemies = [preload("res://eneimgo.scn"), preload("res://enemigo2.scn"),preload("res://enemigo3.scn"),preload("res://enemigo4.scn")]
