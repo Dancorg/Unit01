@@ -13,6 +13,7 @@ var energypack = preload("res://energy_pack.scn")
 
 var primary 
 var explosion
+var death_countdown = 300
 
 var weapons_cooldown = [30]
 var primary_cooldown = 0
@@ -27,8 +28,10 @@ const TYPE1=0
 const TYPE2=1
 const TYPE3=2
 const TYPE4=3
+const TYPE5=4
+const TYPE6=5
 
-export(int, "type1", "type2", "type3", "type4") var type=TYPE1
+export(int, "type1", "type2", "type3", "type4", "type5", "type6") var type=TYPE1
 
 
 func _ready():
@@ -72,6 +75,27 @@ func _ready():
 		primary = preload("res://bullet2.scn")
 		explosion = preload("res://Explosion4.scn")
 		rotate_speed = 2
+	if type==TYPE5:
+		hp=500
+		max_hp=500.0
+		weapons_cooldown = [20]
+		primary_vo = 700
+		engage_distance = 800
+		engine = 0
+		primary = preload("res://bullet3.scn")
+		explosion = preload("res://Explosion2.scn")
+		rotate_speed = 1
+	if type==TYPE6:
+		hp=400
+		max_hp=400.0
+		weapons_cooldown = [5]
+		primary_vo = 500
+		engage_distance = 500
+		engine = 0
+		primary = preload("res://bullet2.scn")
+		explosion = preload("res://Explosion3.scn")
+		rotate_speed = 3
+
 	set_fixed_process(true)
 
 func _fixed_process(delta):
@@ -122,36 +146,49 @@ func _fixed_process(delta):
 					var bullet1 = primary.instance()
 					bullet1.set_pos(get_pos() + Vector2(sin(get_rot()),cos(get_rot())).normalized()*30)
 					bullet1.set_rot(get_rot()+(randf()*0.3-0.15) )
-					bullet1.set_linear_velocity(Vector2(sin(bullet1.get_rot()),cos(bullet1.get_rot()))*primary_vo + get_linear_velocity())
+					bullet1.set_linear_velocity(Vector2(sin(bullet1.get_rot()),cos(bullet1.get_rot()))*primary_vo )
 					get_node("/root/Node").add_child(bullet1)
 					
 				if type==TYPE2:
 					var bullet1 = primary.instance()
 					bullet1.set_pos(get_pos() + Vector2(sin(get_rot()-0.5),cos(get_rot()-0.5)).normalized()*20)
 					bullet1.set_rot(get_rot()+(randf()*0.2-0.1) )
-					bullet1.set_linear_velocity(Vector2(sin(bullet1.get_rot()),cos(bullet1.get_rot()))*primary_vo + get_linear_velocity())
+					bullet1.set_linear_velocity(Vector2(sin(bullet1.get_rot()),cos(bullet1.get_rot()))*primary_vo )
 					get_node("/root/Node").add_child(bullet1)
 					
 					var bullet2 = primary.instance()
 					bullet2.set_pos(get_pos() + Vector2(sin(get_rot()+0.5),cos(get_rot()+0.5)).normalized()*20)
 					bullet2.set_rot(get_rot()+(randf()*0.2-0.1) )
-					bullet2.set_linear_velocity(Vector2(sin(bullet2.get_rot()),cos(bullet2.get_rot()))*primary_vo + get_linear_velocity())
+					bullet2.set_linear_velocity(Vector2(sin(bullet2.get_rot()),cos(bullet2.get_rot()))*primary_vo )
 					get_node("/root/Node").add_child(bullet2)
 					
 				if type==TYPE3:
 					var bullet1 = primary.instance()
 					bullet1.set_pos(get_pos() + Vector2(sin(get_rot()),cos(get_rot())).normalized()*30)
 					bullet1.set_rot(get_rot()+(randf()*0.2-0.1) )
-					bullet1.set_linear_velocity(Vector2(sin(bullet1.get_rot()),cos(bullet1.get_rot()))*primary_vo + get_linear_velocity())
+					bullet1.set_linear_velocity(Vector2(sin(bullet1.get_rot()),cos(bullet1.get_rot()))*primary_vo )
 					get_node("/root/Node").add_child(bullet1)
 					
 				if type==TYPE4:
 					var bullet1 = primary.instance()
 					bullet1.set_pos(get_pos() + Vector2(sin(get_rot()),cos(get_rot())).normalized()*30)
 					bullet1.set_rot(get_rot()+(randf()*0.5-0.25) )
-					bullet1.set_linear_velocity(Vector2(sin(bullet1.get_rot()),cos(bullet1.get_rot()))*primary_vo + get_linear_velocity())
+					bullet1.set_linear_velocity(Vector2(sin(bullet1.get_rot()),cos(bullet1.get_rot()))*primary_vo )
+					get_node("/root/Node").add_child(bullet1)
+					
+				if type==TYPE5:
+					var bullet1 = primary.instance()
+					bullet1.set_pos(get_pos() + Vector2(sin(get_rot()),cos(get_rot())).normalized()*40)
+					bullet1.set_rot(get_rot()+(randf()*0.1-0.05) )
+					bullet1.set_linear_velocity(Vector2(sin(bullet1.get_rot()),cos(bullet1.get_rot()))*primary_vo )
 					get_node("/root/Node").add_child(bullet1)
 		
+				if type==TYPE6:
+					var bullet1 = primary.instance()
+					bullet1.set_pos(get_pos() + Vector2(sin(get_rot()),cos(get_rot())).normalized()*30)
+					bullet1.set_rot(get_rot()+(randf()*0.4-0.2) )
+					bullet1.set_linear_velocity(Vector2(sin(bullet1.get_rot()),cos(bullet1.get_rot()))*primary_vo )
+					get_node("/root/Node").add_child(bullet1)
 	else:
 		for i in get_node("/root/Node").get_children():
 			if i extends player_class:
