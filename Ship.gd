@@ -7,7 +7,8 @@ var secondary_cooldown = 0
 var special_cooldown = 0
 var primary = preload("res://bullet.scn")
 var energypack = preload("res://energy_pack.gd")
-var hp = 1000
+var hp = 300
+var max_hp = 300.0
 
 const absolute = 0
 const relative = 1
@@ -82,7 +83,7 @@ func _fixed_process(delta):
 	if special_cooldown > 0:
 		special_cooldown -= 1
 
-	get_node("healthbar").set_scale(Vector2(hp/1000.0,1))
+	get_node("healthbar").set_scale(Vector2(hp/max_hp,1))
 	
 	if hp <= 0:
 		get_tree().change_scene("res://splash_screen.scn")
