@@ -5,6 +5,8 @@ var range_timer = 60
 var hp = 5
 var damage = 10
 var spark = preload("res://spark2.scn")
+var energypack_class = preload("res://energy_pack.gd")
+var owner = null
 
 func _ready():
 	set_fixed_process(true)

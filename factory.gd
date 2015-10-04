@@ -4,13 +4,15 @@ extends Node2D
 var death_countdown = 150
 
 var wave_count = 0
-#var timer_wave = 120
+
 var timer_warmup = -1
 var points = 150
+var min_level = 0
+var max_level = 0
 
 var next_product = 0
 
-var enemies = [preload("res://eneimgo.scn"), preload("res://enemigo2.scn"),preload("res://enemigo3.scn"),preload("res://enemigo4.scn")]
+var enemies = [preload("res://enemigo0.scn"), preload("res://eneimgo.scn"), preload("res://enemigo2.scn"),preload("res://enemigo3.scn"),preload("res://enemigo4.scn")]
 var explosion = [preload("res://Explosion2.scn"),preload("res://Explosion4.scn"), preload("res://ExplosionLarge1.scn")]
 
 export(int) var timer_wave=120
@@ -23,6 +25,11 @@ func _fixed_process(delta):
 		get_node("wall").hp = 0
 	get_node("wall/healthbar").set_scale(Vector2(get_node("wall").hp/get_node("wall").max_hp,1))
 	
+	if timer_wave >= 0:
+		get_node("wall/Label").set_text("OFFLINE-" + str(ceil(timer_wave/60)))
+	else:
+		get_node("wall/Label").set_text("ONLINE")
+		
 	if get_node("wall").hp <= 0:
 		death_countdown -= 1
 		var chance = floor(rand_range(0,10))
@@ -41,15 +48,17 @@ func _fixed_process(delta):
 
 	if timer_wave <= 0:
 		if timer_warmup == -1:
-			next_product = floor(rand_range(0,4))
+			next_product = floor(rand_range(min_level,max_level))
 			get_node("wall/Particles2D").set_emitting(true)
 			if next_product == 0:
-				timer_warmup = 30
+				timer_warmup = 20
 			if next_product == 1:
-				timer_warmup = 60
+				timer_warmup = 40
 			if next_product == 2:
-				timer_warmup = 240
+				timer_warmup = 60
 			if next_product == 3:
+				timer_warmup = 240
+			if next_product == 4:
 				timer_warmup = 300
 
 		timer_warmup -= 1
@@ -65,20 +74,25 @@ func _fixed_process(delta):
 			#enemy_countdown -= 1
 			
 			if next_product == 0:
-				points -= 100
+				points -= 50
 
 			if next_product == 1:
-				points -= 200
+				points -= 100
 
 			if next_product == 2:
-				points -= 400
+				points -= 200
 
 			if next_product == 3:
-				points -= 500
+				points -= 450
+				
+			if next_product == 4:
+				points -= 600
 
 	if points <= 0:
 		timer_wave = 600
-		points = 150 + wave_count * 20
+		if wave_count%5 == 0 and max_level < 4:
+			max_level += 1
+		points = 80 + wave_count * 20
 	timer_wave -= 1
 
 

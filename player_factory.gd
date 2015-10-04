@@ -39,12 +39,13 @@ func _fixed_process(delta):
 		player_inside = false
 		
 	if player_inside:
-		
 		if player.hp < player.max_hp:
 			get_node("wall/Particles2D").set_emitting(true)
 			player.hp += 1
 		else:
 			get_node("wall/Particles2D").set_emitting(false)
+	else:
+		get_node("wall/Particles2D").set_emitting(false)
 
 
 

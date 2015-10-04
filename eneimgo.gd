@@ -24,24 +24,35 @@ var sideways_direction = PI / 2
 var engage_distance = 600
 var rotate_speed = 3
 
-const TYPE1=0
-const TYPE2=1
-const TYPE3=2
-const TYPE4=3
-const TYPE5=4
-const TYPE6=5
+const TYPE0=0
+const TYPE1=1
+const TYPE2=2
+const TYPE3=3
+const TYPE4=4
+const TYPE5=5
+const TYPE6=6
 
-export(int, "type1", "type2", "type3", "type4", "type5", "type6") var type=TYPE1
+export(int, "type0", "type1", "type2", "type3", "type4", "type5", "type6") var type=TYPE1
 
 
 func _ready():
+	if type==TYPE0:
+		hp=40
+		max_hp=40.0
+		weapons_cooldown = [30]
+		primary_vo = 400
+		engage_distance = 500
+		engine = 2
+		primary = preload("res://bullet2.scn")
+		explosion = preload("res://Explosion5.scn")
+		rotate_speed = 2.5
 	if type==TYPE1:
 		hp=30
 		max_hp=30.0
 		weapons_cooldown = [40]
-		primary_vo = 400
-		engage_distance = 500
-		engine = 3
+		primary_vo = 600
+		engage_distance = 700
+		engine = 5
 		primary = preload("res://bullet2.scn")
 		explosion = preload("res://Explosion.scn")
 		rotate_speed = 3
@@ -130,7 +141,7 @@ func _fixed_process(delta):
 					if type==TYPE2:
 						change_direction_timer = 20 + round(rand_range(0, 40))
 						sideways_direction = sign(rand_range(-1,1)) * rand_range(PI/4, PI*(3/4))
-					if type==TYPE3:
+					if type==TYPE3 or type==TYPE0:
 						change_direction_timer = 30 + round(rand_range(0, 90))
 						sideways_direction = sign(rand_range(-1,1)) * rand_range(PI/4, PI*(3/4))
 					if type==TYPE4:
@@ -142,6 +153,13 @@ func _fixed_process(delta):
 		if  distance < engage_distance and abs(ang) < 0.03 and line_of_sight:
 			if primary_cooldown == 0:
 				primary_cooldown = weapons_cooldown[0]
+				if type==TYPE0:
+					var bullet1 = primary.instance()
+					bullet1.set_pos(get_pos() + Vector2(sin(get_rot()),cos(get_rot())).normalized()*20)
+					bullet1.set_rot(get_rot()+(randf()*0.4-0.2) )
+					bullet1.set_linear_velocity(Vector2(sin(bullet1.get_rot()),cos(bullet1.get_rot()))*primary_vo )
+					get_node("/root/Node").add_child(bullet1)
+					
 				if type==TYPE1:
 					var bullet1 = primary.instance()
 					bullet1.set_pos(get_pos() + Vector2(sin(get_rot()),cos(get_rot())).normalized()*30)
