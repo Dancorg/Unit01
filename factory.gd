@@ -6,7 +6,7 @@ var death_countdown = 150
 var wave_count = 0
 
 var timer_warmup = -1
-var points = 150
+var points = 100
 var min_level = 0
 var max_level = 0
 
@@ -77,10 +77,10 @@ func _fixed_process(delta):
 				points -= 50
 
 			if next_product == 1:
-				points -= 100
+				points -= 90
 
 			if next_product == 2:
-				points -= 200
+				points -= 150
 
 			if next_product == 3:
 				points -= 450
@@ -89,6 +89,7 @@ func _fixed_process(delta):
 				points -= 600
 
 	if points <= 0:
+		wave_count += 1
 		timer_wave = 600
 		if wave_count%5 == 0 and max_level < 4:
 			max_level += 1

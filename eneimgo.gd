@@ -88,8 +88,8 @@ func _ready():
 		explosion = preload("res://Explosion4.scn")
 		rotate_speed = 2
 	if type==TYPE5:
-		hp=500
-		max_hp=500.0
+		hp=400
+		max_hp=400.0
 		weapons_cooldown = [20]
 		primary_vo = 700
 		engage_distance = 800
@@ -98,8 +98,8 @@ func _ready():
 		explosion = preload("res://Explosion2.scn")
 		rotate_speed = 1
 	if type==TYPE6:
-		hp=400
-		max_hp=400.0
+		hp=300
+		max_hp=300.0
 		weapons_cooldown = [5]
 		primary_vo = 500
 		engage_distance = 500
