@@ -1,9 +1,10 @@
 
 extends RigidBody2D
 
+const is_projectile = 1
 var range_timer = 60
 var hp = 15
-var damage = 50
+var damage = 25
 var spark = preload("res://spark1.scn")
 var energypack_class = preload("res://energy_pack.gd")
 var owner = null
@@ -20,10 +21,9 @@ func _integrate_forces(state):
 	for i in range(state.get_contact_count()):
 		var contact = state.get_contact_collider_object(i)
 		if contact: 
-			if contact extends energypack_class:
-				owner.hp += contact.hp
 			contact.hp -= damage
-		hp = 0
+		if contact.is_projectile == 0:
+			hp = 0
 		var chispa = spark.instance()
 		chispa.set_pos(get_pos())
 		chispa.set_emitting(true)

@@ -3,7 +3,7 @@ extends RigidBody2D
 
 var range_timer = 120
 var hp = 30
-var damage = 50
+var damage = 70
 var enemy_class = preload("res://eneimgo.gd")
 var spark = preload("res://Explosion.scn")
 var trail_preload = preload("res://trail1.scn")
@@ -11,6 +11,7 @@ var trail
 var owner = null
 var target = null
 var detector = null
+const is_projectile = 1
 
 func _ready():
 	trail = trail_preload.instance()
@@ -50,7 +51,8 @@ func _integrate_forces(state):
 		var contact = state.get_contact_collider_object(i)
 		if contact:
 			contact.hp -= damage
-		hp = 0
+		if contact.is_projectile == 0:
+			hp = 0
 		var chispa = spark.instance()
 		chispa.set_pos(get_pos())
 		chispa.set_emitting(true)

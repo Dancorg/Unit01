@@ -10,6 +10,7 @@ var factory_class = preload("res://factory.gd")
 var this_class = load("res://eneimgo.gd")
 var energypack_class = preload("res://energy_pack.gd")
 var energypack = preload("res://energy_pack.scn")
+const is_projectile = 0
 
 var primary 
 var explosion
@@ -32,7 +33,7 @@ const TYPE4=4
 const TYPE5=5
 const TYPE6=6
 
-export(int, "type0", "type1", "type2", "type3", "type4", "type5", "type6") var type=TYPE1
+export(int, "type0", "type1", "type2", "type3", "type4", "type5", "type6") var type=TYPE0
 
 
 func _ready():
@@ -83,7 +84,7 @@ func _ready():
 		primary_vo = 500
 		engage_distance = 600
 		engine = 5
-		primary = preload("res://bullet2.scn")
+		primary = preload("res://bullet.scn")
 		explosion = preload("res://Explosion4.scn")
 		rotate_speed = 2
 	if type==TYPE5:
@@ -189,7 +190,7 @@ func _fixed_process(delta):
 					
 				if type==TYPE4:
 					var bullet1 = primary.instance()
-					bullet1.set_pos(get_pos() + Vector2(sin(get_rot()),cos(get_rot())).normalized()*30)
+					bullet1.set_pos(get_pos() + Vector2(sin(get_rot()),cos(get_rot())).normalized()*40)
 					bullet1.set_rot(get_rot()+(randf()*0.5-0.25) )
 					bullet1.set_linear_velocity(Vector2(sin(bullet1.get_rot()),cos(bullet1.get_rot()))*primary_vo )
 					get_node("/root/Node").add_child(bullet1)

@@ -1,14 +1,18 @@
 
 extends RigidBody2D
 
-var weapons_cooldown = [10, 60, 300]
+var weapons_cooldown = [15, 90, 300]
 var primary_cooldown = 0
-var secondary_cooldown = 0
+var secondary_cooldown = -1
 var special_cooldown = 0
 var primary = [preload("res://bullet2.scn"), preload("res://bullet.scn"),preload("res://bullet3.scn")]
 var primary_weapon = 0
 var secondary = preload("res://missil1.scn")
 var energypack = preload("res://energy_pack.gd")
+var lightgun_powerup = preload("res://lightgun_powerup.gd")
+var autocannon_powerup = preload("res://autocannon_powerup.gd")
+var heavycannon_powerup = preload("res://heavycannon_powerup.gd")
+var missile_powerup = preload("res://missile_powerup.gd")
 var explosion = preload("res://ExplosionLarge1.scn")
 var small_explosion = preload("res://Explosion2.scn")
 var enemy_class = preload("res://eneimgo.gd")
@@ -17,7 +21,7 @@ var max_hp = 300.0
 var death_countdown = 120
 var alive = true
 var target = null
-
+const is_projectile = 0
 
 const absolute = 0
 const relative = 1
@@ -29,9 +33,9 @@ func _ready():
 	pass
 
 func _fixed_process(delta):
-	#get_node("Area2D").set_global_pos(get_viewport_transform().affine_inverse().xform( get_viewport().get_mouse_pos()))
+
 	get_node("Area2D").set_global_pos(get_viewport().get_mouse_pos() + get_node("Camera2D").get_camera_screen_center() - get_viewport_rect().size/2 )
-	#var ang = get_angle_to(get_viewport_transform().affine_inverse().xform( get_viewport().get_mouse_pos()))
+
 	var ang = get_angle_to(get_viewport().get_mouse_pos() + get_node("Camera2D").get_camera_screen_center() - get_viewport_rect().size/2 )
 
 	rotate(ang*delta*6)
@@ -146,7 +150,24 @@ func _integrate_forces(state):
 		if contact and contact extends energypack:
 			hp += contact.hp
 			contact.hp = 0
+		if contact and contact extends lightgun_powerup:
+			primary_weapon = 0
+			weapons_cooldown[0] = 5
+			contact.hp = 0
+				
+		if contact and contact extends autocannon_powerup:
+			primary_weapon = 1
+			weapons_cooldown[0] = 12
+			contact.hp = 0
+			
+		if contact and contact extends heavycannon_powerup:
+			primary_weapon = 2
+			weapons_cooldown[0] = 20
+			contact.hp = 0
 
+		if contact and contact extends missile_powerup:
+			secondary_cooldown = 0
+			contact.hp = 0
 
 func _on_Area2D_body_enter( body ):
 	pass

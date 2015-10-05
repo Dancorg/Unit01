@@ -2,9 +2,11 @@
 extends RigidBody2D
 
 var range_timer = 60
-var hp = 20
-var damage = 30
+var hp = 50
+var damage = 50
 var spark = preload("res://spark3.scn")
+var owner = null
+const is_projectile = 1
 
 func _ready():
 	set_fixed_process(true)
@@ -17,7 +19,8 @@ func _fixed_process(delta):
 func _integrate_forces(state):
 	for i in range(state.get_contact_count()):
 		var contact = state.get_contact_collider_object(i)
-		hp = 0
+		if contact.is_projectile == 0:
+			hp = 0
 		if contact:
 			contact.hp -= damage
 		var chispa = spark.instance()
