@@ -91,7 +91,7 @@ func _fixed_process(delta):
 	if points <= 0:
 		wave_count += 1
 		timer_wave = 900
-		if wave_count%5 == 0 and max_level < 4:
+		if wave_count%5 == 0 and max_level < 5:
 			max_level += 1
 		points = 80 + wave_count * 20
 	timer_wave -= 1
