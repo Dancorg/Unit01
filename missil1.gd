@@ -33,7 +33,6 @@ func _fixed_process(delta):
 		#ang = get_angle_to(target.get_pos())
 	else:
 		get_node("targetArea/target").hide()
-		#ang = get_angle_to(get_viewport_transform().affine_inverse().xform( get_viewport().get_mouse_pos()))
 		ang = get_angle_to(get_viewport().get_mouse_pos() + get_node("/root/Node/ship_blue/Camera2D").get_camera_screen_center() - get_viewport_rect().size/2)
 		
 	rotate(min(abs(ang),8*delta)*sign(ang))

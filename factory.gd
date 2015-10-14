@@ -51,15 +51,15 @@ func _fixed_process(delta):
 			next_product = floor(rand_range(min_level,max_level))
 			get_node("wall/Particles2D").set_emitting(true)
 			if next_product == 0:
-				timer_warmup = 20
+				timer_warmup = 30
 			if next_product == 1:
 				timer_warmup = 40
 			if next_product == 2:
 				timer_warmup = 60
 			if next_product == 3:
-				timer_warmup = 240
+				timer_warmup = 180
 			if next_product == 4:
-				timer_warmup = 300
+				timer_warmup = 240
 
 		timer_warmup -= 1
 
