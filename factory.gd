@@ -12,7 +12,7 @@ var max_level = 0
 
 var next_product = 0
 
-var enemies = [preload("res://enemigo0.scn"), preload("res://eneimgo.scn"), preload("res://enemigo2.scn"),preload("res://enemigo3.scn"),preload("res://enemigo4.scn")]
+var enemies = [preload("res://enemigo0.scn"), preload("res://eneimgo.scn"), preload("res://enemigo2.scn"),preload("res://enemigo3.scn"),preload("res://enemigo4.scn"),preload("res://enemigo5.scn")]
 var explosion = [preload("res://Explosion2.scn"),preload("res://Explosion4.scn"), preload("res://ExplosionLarge1.scn")]
 
 export(int) var timer_wave=120
@@ -57,9 +57,11 @@ func _fixed_process(delta):
 			if next_product == 2:
 				timer_warmup = 60
 			if next_product == 3:
-				timer_warmup = 180
+				timer_warmup = 120
 			if next_product == 4:
-				timer_warmup = 240
+				timer_warmup = 180
+			if next_product == 5:
+				timer_warmup = 90
 
 		timer_warmup -= 1
 
@@ -87,11 +89,14 @@ func _fixed_process(delta):
 				
 			if next_product == 4:
 				points -= 600
+				
+			if next_product == 5:
+				points -= 800
 
 	if points <= 0:
 		wave_count += 1
 		timer_wave = 900
-		if wave_count%5 == 0 and max_level < 5:
+		if wave_count%1 == 0 and max_level < enemies.size():
 			max_level += 1
 		points = 80 + wave_count * 20
 	timer_wave -= 1

@@ -5,6 +5,7 @@ var hp=0
 var max_hp=0
 var target = null
 var player_class = preload("res://Ship.gd")
+var missile_class = preload("res://missil1.gd")
 var wall_class = preload("res://wall.gd")
 var factory_class = preload("res://factory.gd")
 var this_class = load("res://eneimgo.gd")
@@ -24,6 +25,7 @@ var change_direction_timer = 60
 var sideways_direction = PI / 2
 var engage_distance = 600
 var rotate_speed = 3
+var fire_angle = 0.03
 
 const TYPE0=0
 const TYPE1=1
@@ -32,14 +34,15 @@ const TYPE3=3
 const TYPE4=4
 const TYPE5=5
 const TYPE6=6
+const TYPE7=7
 
-export(int, "type0", "type1", "type2", "type3", "type4", "type5", "type6") var type=TYPE0
+export(int, "type0", "type1", "type2", "type3", "type4", "type5", "type6", "type7") var type=TYPE0
 
 
 func _ready():
-	if type==TYPE0:
-		hp=40
-		max_hp=40.0
+	if type == TYPE0:
+		hp = 40
+		max_hp = 40.0
 		weapons_cooldown = [30]
 		primary_vo = 400
 		engage_distance = 500
@@ -47,9 +50,10 @@ func _ready():
 		primary = preload("res://bullet2.scn")
 		explosion = preload("res://Explosion5.scn")
 		rotate_speed = 2.5
-	if type==TYPE1:
-		hp=30
-		max_hp=30.0
+		fire_angle = 0.03
+	if type == TYPE1:
+		hp = 30
+		max_hp = 30.0
 		weapons_cooldown = [40]
 		primary_vo = 600
 		engage_distance = 700
@@ -57,9 +61,10 @@ func _ready():
 		primary = preload("res://bullet2.scn")
 		explosion = preload("res://Explosion.scn")
 		rotate_speed = 3
-	if type==TYPE2:
-		hp=60
-		max_hp=60.0
+		fire_angle = 0.03
+	if type == TYPE2:
+		hp = 60
+		max_hp = 60.0
 		weapons_cooldown = [30]
 		primary_vo = 400
 		engage_distance = 500
@@ -67,9 +72,10 @@ func _ready():
 		primary = preload("res://bullet2.scn")
 		explosion = preload("res://Explosion2.scn")
 		rotate_speed = 2.5
-	if type==TYPE3:
-		hp=300
-		max_hp=300.0
+		fire_angle = 0.03
+	if type == TYPE3:
+		hp = 300
+		max_hp = 300.0
 		weapons_cooldown = [60]
 		primary_vo = 600
 		engage_distance = 700
@@ -77,9 +83,10 @@ func _ready():
 		primary = preload("res://bullet3.scn")
 		explosion = preload("res://Explosion3.scn")
 		rotate_speed = 1.5
-	if type==TYPE4:
-		hp=200
-		max_hp=200.0
+		fire_angle = 0.02
+	if type == TYPE4:
+		hp = 200
+		max_hp = 200.0
 		weapons_cooldown = [10]
 		primary_vo = 500
 		engage_distance = 600
@@ -87,9 +94,10 @@ func _ready():
 		primary = preload("res://bullet.scn")
 		explosion = preload("res://Explosion4.scn")
 		rotate_speed = 2
-	if type==TYPE5:
-		hp=400
-		max_hp=400.0
+		fire_angle = 0.05
+	if type == TYPE5:
+		hp = 400
+		max_hp = 400.0
 		weapons_cooldown = [20]
 		primary_vo = 700
 		engage_distance = 800
@@ -97,9 +105,10 @@ func _ready():
 		primary = preload("res://bullet3.scn")
 		explosion = preload("res://Explosion2.scn")
 		rotate_speed = 1
-	if type==TYPE6:
-		hp=300
-		max_hp=300.0
+		fire_angle = 0.03
+	if type == TYPE6:
+		hp = 300
+		max_hp = 300.0
 		weapons_cooldown = [5]
 		primary_vo = 500
 		engage_distance = 500
@@ -107,11 +116,23 @@ func _ready():
 		primary = preload("res://bullet2.scn")
 		explosion = preload("res://Explosion3.scn")
 		rotate_speed = 3
-
+		fire_angle = 0.07
+	if type == TYPE7:
+		hp = 120
+		max_hp = 120.0
+		weapons_cooldown = [90]
+		primary_vo = 1000
+		engage_distance = 900
+		engine = 3
+		primary = preload("res://missil2.scn")
+		explosion = preload("res://Explosion3.scn")
+		rotate_speed = 3
+		fire_angle = 0.1
+		
 	set_fixed_process(true)
 
 func _fixed_process(delta):
-	if target and target extends player_class:
+	if target and (target extends player_class or target extends missile_class):
 	
 		var lead_position = get_lead_position(self, target, primary_vo)
 		var distance = sqrt( pow(lead_position[0] - get_pos()[0],2) + pow(lead_position[1] - get_pos()[1],2))
@@ -142,7 +163,7 @@ func _fixed_process(delta):
 					if type==TYPE2:
 						change_direction_timer = 20 + round(rand_range(0, 40))
 						sideways_direction = sign(rand_range(-1,1)) * rand_range(PI/4, PI*(3/4))
-					if type==TYPE3 or type==TYPE0:
+					if type==TYPE3 or type==TYPE0 or type==TYPE7:
 						change_direction_timer = 30 + round(rand_range(0, 90))
 						sideways_direction = sign(rand_range(-1,1)) * rand_range(PI/4, PI*(3/4))
 					if type==TYPE4:
@@ -151,7 +172,7 @@ func _fixed_process(delta):
 					
 				apply_impulse(get_pos(),engine*Vector2(sin( get_rot() + sideways_direction), cos( get_rot() + sideways_direction)))
 		
-		if  distance < engage_distance and abs(ang) < 0.03 and line_of_sight:
+		if  distance < engage_distance and abs(ang) < fire_angle and line_of_sight:
 			if primary_cooldown == 0:
 				primary_cooldown = weapons_cooldown[0]
 				if type==TYPE0:
@@ -208,6 +229,14 @@ func _fixed_process(delta):
 					bullet1.set_rot(get_rot()+(randf()*0.4-0.2) )
 					bullet1.set_linear_velocity(Vector2(sin(bullet1.get_rot()),cos(bullet1.get_rot()))*primary_vo )
 					get_node("/root/Node").add_child(bullet1)
+					
+				if type==TYPE7:
+					var missile = primary.instance()
+					missile.set_pos(get_pos() + Vector2(sin(get_rot()),cos(get_rot())).normalized()*30)
+					missile.set_rot(get_rot() )
+					missile.set_linear_velocity(Vector2(sin(missile.get_rot()),cos(missile.get_rot()))*100 )
+					missile.target = target
+					get_node("/root/Node").add_child(missile)
 	else:
 		for i in get_node("/root/Node").get_children():
 			if i extends player_class:
@@ -273,8 +302,8 @@ func get_lead_position(shooter, target, bullet_speed):
 	var p = -b / (2 * a)
 	var q = sqrt((b * b) - 4 * a * c) / (2 * a)
 
-	var t1 = p - q
-	var t2 = p + q
+	var t1 = p + q
+	var t2 = p - q
 	var t
 
 	if (t1 > t2 and t2 > 0):
@@ -283,3 +312,7 @@ func get_lead_position(shooter, target, bullet_speed):
 	else:
 		t = t1
 	return Vector2(target.get_pos()[0] + target.get_linear_velocity()[0] * t, target.get_pos()[1] + target.get_linear_velocity()[1] * t)
+
+func _on_target_area_body_enter( body ):
+	if body extends missile_class:
+		target = body
