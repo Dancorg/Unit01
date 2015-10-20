@@ -280,7 +280,10 @@ func is_clear_line_of_sight(target):
 
 	var ray = space_state.intersect_ray(get_pos(), target, [self])
 
+	if not "collider" in ray:
+		return true
 	var collider = ray.collider
+	
 
 
 	if collider:
