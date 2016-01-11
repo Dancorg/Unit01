@@ -179,62 +179,62 @@ func _fixed_process(delta):
 					var bullet1 = primary.instance()
 					bullet1.set_pos(get_pos() + Vector2(sin(get_rot()),cos(get_rot())).normalized()*20)
 					bullet1.set_rot(get_rot()+(randf()*0.4-0.2) )
-					bullet1.set_linear_velocity(Vector2(sin(bullet1.get_rot()),cos(bullet1.get_rot()))*primary_vo )
+					bullet1.set_linear_velocity(Vector2(sin(bullet1.get_rot()),cos(bullet1.get_rot()))*primary_vo + get_linear_velocity() )
 					get_node("/root/Node").add_child(bullet1)
 					
 				if type==TYPE1:
 					var bullet1 = primary.instance()
 					bullet1.set_pos(get_pos() + Vector2(sin(get_rot()),cos(get_rot())).normalized()*30)
 					bullet1.set_rot(get_rot()+(randf()*0.3-0.15) )
-					bullet1.set_linear_velocity(Vector2(sin(bullet1.get_rot()),cos(bullet1.get_rot()))*primary_vo )
+					bullet1.set_linear_velocity(Vector2(sin(bullet1.get_rot()),cos(bullet1.get_rot()))*primary_vo + get_linear_velocity() )
 					get_node("/root/Node").add_child(bullet1)
 					
 				if type==TYPE2:
 					var bullet1 = primary.instance()
 					bullet1.set_pos(get_pos() + Vector2(sin(get_rot()-0.5),cos(get_rot()-0.5)).normalized()*20)
 					bullet1.set_rot(get_rot()+(randf()*0.2-0.1) )
-					bullet1.set_linear_velocity(Vector2(sin(bullet1.get_rot()),cos(bullet1.get_rot()))*primary_vo )
+					bullet1.set_linear_velocity(Vector2(sin(bullet1.get_rot()),cos(bullet1.get_rot()))*primary_vo + get_linear_velocity() )
 					get_node("/root/Node").add_child(bullet1)
 					
 					var bullet2 = primary.instance()
 					bullet2.set_pos(get_pos() + Vector2(sin(get_rot()+0.5),cos(get_rot()+0.5)).normalized()*20)
 					bullet2.set_rot(get_rot()+(randf()*0.2-0.1) )
-					bullet2.set_linear_velocity(Vector2(sin(bullet2.get_rot()),cos(bullet2.get_rot()))*primary_vo )
+					bullet2.set_linear_velocity(Vector2(sin(bullet2.get_rot()),cos(bullet2.get_rot()))*primary_vo + get_linear_velocity() )
 					get_node("/root/Node").add_child(bullet2)
 					
 				if type==TYPE3:
 					var bullet1 = primary.instance()
 					bullet1.set_pos(get_pos() + Vector2(sin(get_rot()),cos(get_rot())).normalized()*30)
 					bullet1.set_rot(get_rot()+(randf()*0.2-0.1) )
-					bullet1.set_linear_velocity(Vector2(sin(bullet1.get_rot()),cos(bullet1.get_rot()))*primary_vo )
+					bullet1.set_linear_velocity(Vector2(sin(bullet1.get_rot()),cos(bullet1.get_rot()))*primary_vo + get_linear_velocity() )
 					get_node("/root/Node").add_child(bullet1)
 					
 				if type==TYPE4:
 					var bullet1 = primary.instance()
 					bullet1.set_pos(get_pos() + Vector2(sin(get_rot()),cos(get_rot())).normalized()*40)
 					bullet1.set_rot(get_rot()+(randf()*0.5-0.25) )
-					bullet1.set_linear_velocity(Vector2(sin(bullet1.get_rot()),cos(bullet1.get_rot()))*primary_vo )
+					bullet1.set_linear_velocity(Vector2(sin(bullet1.get_rot()),cos(bullet1.get_rot()))*primary_vo + get_linear_velocity() )
 					get_node("/root/Node").add_child(bullet1)
 					
 				if type==TYPE5:
 					var bullet1 = primary.instance()
 					bullet1.set_pos(get_pos() + Vector2(sin(get_rot()),cos(get_rot())).normalized()*40)
 					bullet1.set_rot(get_rot()+(randf()*0.1-0.05) )
-					bullet1.set_linear_velocity(Vector2(sin(bullet1.get_rot()),cos(bullet1.get_rot()))*primary_vo )
+					bullet1.set_linear_velocity(Vector2(sin(bullet1.get_rot()),cos(bullet1.get_rot()))*primary_vo + get_linear_velocity() )
 					get_node("/root/Node").add_child(bullet1)
 		
 				if type==TYPE6:
 					var bullet1 = primary.instance()
 					bullet1.set_pos(get_pos() + Vector2(sin(get_rot()),cos(get_rot())).normalized()*30)
 					bullet1.set_rot(get_rot()+(randf()*0.4-0.2) )
-					bullet1.set_linear_velocity(Vector2(sin(bullet1.get_rot()),cos(bullet1.get_rot()))*primary_vo )
+					bullet1.set_linear_velocity(Vector2(sin(bullet1.get_rot()),cos(bullet1.get_rot()))*primary_vo + get_linear_velocity() )
 					get_node("/root/Node").add_child(bullet1)
 					
 				if type==TYPE7:
 					var missile = primary.instance()
 					missile.set_pos(get_pos() + Vector2(sin(get_rot()),cos(get_rot())).normalized()*30)
 					missile.set_rot(get_rot() )
-					missile.set_linear_velocity(Vector2(sin(missile.get_rot()),cos(missile.get_rot()))*100 )
+					missile.set_linear_velocity(Vector2(sin(missile.get_rot()),cos(missile.get_rot()))*100 + get_linear_velocity() )
 					missile.target = target
 					get_node("/root/Node").add_child(missile)
 	else:
@@ -305,16 +305,16 @@ func get_lead_position(shooter, target, bullet_speed):
 	var p = -b / (2 * a)
 	var q = sqrt((b * b) - 4 * a * c) / (2 * a)
 
-	var t1 = p + q
-	var t2 = p - q
+	var t1 = p - q
+	var t2 = p + q
 	var t
 
 	if (t1 > t2 and t2 > 0):
 		t = t2
-	
 	else:
 		t = t1
-	return Vector2(target.get_pos()[0] + target.get_linear_velocity()[0] * t, target.get_pos()[1] + target.get_linear_velocity()[1] * t)
+		
+	return Vector2(target.get_pos()[0] + target.get_linear_velocity()[0] * t - shooter.get_linear_velocity()[0] * t, target.get_pos()[1] + target.get_linear_velocity()[1] * t - shooter.get_linear_velocity()[1] * t)
 
 func _on_target_area_body_enter( body ):
 	if body extends missile_class:

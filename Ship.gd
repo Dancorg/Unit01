@@ -1,12 +1,12 @@
 
 extends RigidBody2D
 
-var weapons_cooldown = [15, 90, 300]
+var weapons_cooldown = [15, 90, 300, 400]
 var primary_cooldown = 0
 var secondary_cooldown = -1
 var special_cooldown = 0
-var primary = [preload("res://bullet2.scn"), preload("res://bullet.scn"),preload("res://bullet3.scn")]
-var primary_weapon = 0
+var primary = [preload("res://bullet2.scn"), preload("res://bullet.scn"),preload("res://bullet3.scn"),preload("res://bullet4.scn")]
+var primary_weapon = 3
 var secondary = preload("res://missil1.scn")
 var energypack = preload("res://energy_pack.gd")
 var lightgun_powerup = preload("res://lightgun_powerup.gd")
